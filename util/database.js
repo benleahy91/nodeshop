@@ -6,7 +6,7 @@ let _db;
 const mongoConnect = callback => {
   MongoClient.connect('mongodb://nodeben:nodeBen34@ds245234.mlab.com:45234/nodeshop')
 	.then(client => {
-		console.log('Connected!');
+		// console.log('Connected!');
 		_db = client.db();
 		callback();
 	})
