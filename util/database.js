@@ -4,20 +4,17 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 const mongoConnect = callback => {
-  MongoClient.connect(
-    'mongodb+srv://nodeben:<3G7rZnxaE5QqpCcX>@cluster0-sheee.mongodb.net/test?retryWrites=true'
-  )
-    .then(client => {
-      console.log('Connected!');
-      _db = client.db();
-      callback();
-    })
-    .catch(err => {
-      console.log(err);
-      throw err;
-    });
+  MongoClient.connect('mongodb://nodeben:nodeBen34@ds245234.mlab.com:45234/nodeshop')
+	.then(client => {
+		console.log('Connected!');
+		_db = client.db();
+		callback();
+	})
+	.catch(err => {
+		console.log(err);
+		throw err;
+	});
 };
-
 const getDb = () => {
   if (_db) {
     return _db;
