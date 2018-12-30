@@ -1,22 +1,22 @@
 const Product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
-	Product.fetchAll()
-	.then(products => {
-		res.render('shop/product-list', {
-			prods: products,
-			pageTitle: 'All Products',
-			path: '/',
-		});
-	})
-	.catch( err => {
-		console.log(err);
-	});
+  Product.fetchAll()
+    .then(products => {
+      res.render('shop/product-list', {
+        prods: products,
+        pageTitle: 'All Products',
+        path: '/products'
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getProduct = (req, res, next) => {
-	const prodId = req.params.prodId;
-	Product.findById(prodId)
+	const prodId = req.params.prouctdId;
+  Product.findById(prodId)
 	.then(product => {
 		res.render('shop/product-detail', {
 			product: product,
@@ -28,7 +28,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-	Product.fetchAll()
+  Product.fetchAll()
 	.then(products => {
 		res.render('shop/index', {
 			prods: products,
@@ -41,31 +41,28 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   req.user
-    .getCart()
-    .then(cart => {
-      return cart
-        .getProducts()
-        .then(products => {
-          res.render('shop/cart', {
-            path: '/cart',
-            pageTitle: 'Your Cart',
-            products: products
-          });
-        })
-		.catch(err => console.log(err));		
-    })
-    .catch(err => console.log(err));
+	.getCart()
+	.then(products => {
+		res.render('shop/cart', {
+			path: '/cart',
+			pageTitle: 'Your Cart',
+			products: products
+		});
+	})
+	.catch(err => console.log(err));
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId)
-	.then(product => {
-		return req.user.addToCart(product);
-	})
-	.then(result => {
-		console.log(result);	
-	})
+    .then(product => {
+			//return**!
+      req.user.addToCart(product);
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect('/cart');
+    });
   // let fetchedCart;
   // let newQuantity = 1;
   // req.user
@@ -98,10 +95,11 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
-	const prodId = req.body.productId;
-	req.user.getCart()
+  const prodId = req.body.productId;
+  req.user
+	.getCart()
 	.then(cart => {
-		return cart.getProducts({ where: { id: prodId } })
+		return cart.getProducts({ where: { id: prodId } });
 	})
 	.then(products => {
 		const product = products[0];
@@ -114,44 +112,44 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-	let fetchedCart;
-	req.user.getCart()
-		.then(cart => {
-			fetchedCart = cart;
-			return cart.getProducts();
-		})
-		.then(products => {
-			return req.user
+  let fetchedCart;
+  req.user
+	.getCart()
+	.then(cart => {
+		fetchedCart = cart;
+		return cart.getProducts();
+	})
+	.then(products => {
+		return req.user
 			.createOrder()
 			.then(order => {
-				return order.addProducts(products.map(product => {
-					product.orderItem = { quantity: product.cartItem.quantity };
-					return product
-				}));
+				return order.addProducts(
+					products.map(product => {
+						product.orderItem = { quantity: product.cartItem.quantity };
+						return product;
+					})
+				);
 			})
 			.catch(err => console.log(err));
-		})
-		.then(result => {
-			return fetchedCart.setProducts(null);
-		})
-		.then(result => {
-			fetchedCart.setProducts(null);
-		})
-		.then(result => {
-			res.redirect('/orders')
-		})
+	})
+	.then(result => {
+		return fetchedCart.setProducts(null);
+	})
+	.then(result => {
+		res.redirect('/orders');
+	})
 	.catch(err => console.log(err));
-}
+};
 
 exports.getOrders = (req, res, next) => {
-	req.user
-	.getOrders({include: ['products']})
+  req.user
+	.getOrders({ include: ['products'] })
 	.then(orders => {
-	  res.render('shop/orders', {
+		res.render('shop/orders', {
 			path: '/orders',
 			pageTitle: 'Your Orders',
 			orders: orders
-		});	
+		});
 	})
 	.catch(err => console.log(err));
 };
