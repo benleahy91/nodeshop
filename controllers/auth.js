@@ -19,7 +19,7 @@ exports.getSignup = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {	
 	const email = req.body.email;
-	const password = req.body.password;	
+	const password = req.body.password;
 	User.findOne({email: email})
 	.then(user => {
 		if (!user) {
@@ -29,7 +29,6 @@ exports.postLogin = (req, res, next) => {
 		.compare(password, user.password)
 		.then(checkMatch => {
 			if (checkMatch) {
-				res.redirect('/')
 				req.session.isLoggedIn = true;
 				req.session.user= user;
 				return req.session.save((err) => {
@@ -43,7 +42,8 @@ exports.postLogin = (req, res, next) => {
 			console.log(err);
 			res.redirect('/login');
 		});
-	});
+	})
+	.catch(err => console.log(err))
 };
 
 exports.postSignup = (req, res, next) => {
