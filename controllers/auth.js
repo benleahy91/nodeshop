@@ -15,7 +15,7 @@ exports.getSignup = (req, res, next) => {
 		pageTitle: 'Signup',
 		isAuthenticated: false
 	});		
-}
+};
 
 exports.postLogin = (req, res, next) => {	
 	const email = req.body.email;

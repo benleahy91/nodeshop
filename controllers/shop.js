@@ -11,9 +11,7 @@ exports.getProducts = (req, res, next) => {
 			isAuthenticated: req.session.isLoggedIn
 		});
 	})
-	.catch(err => {
-		console.log(err);
-	});
+	.catch(err => {console.log(err);});
 };
 
 exports.getProduct = (req, res, next) => {
@@ -40,9 +38,7 @@ exports.getIndex = (req, res, next) => {
 			isAuthenticated: req.session.isLoggedIn
 		});
 	})
-	.catch(err => {
-		console.log(err);
-	});
+	.catch(err => {console.log(err);});
 };
 
 exports.getCart = (req, res, next) => {
@@ -70,7 +66,6 @@ exports.postCart = (req, res, next) => {
 		return req.user.addToCart(product);
 	})
 	.then(result => {
-		console.log("result" + result);
 		res.redirect('/cart');
 	});
 };
