@@ -11,7 +11,6 @@ const transporter = nodemailer.createTransport(sendgridTransport({
 	}
 }));
 
-
 exports.getLogin = (req, res, next) => {
 	let message = req.flash('error');
 	if (message.length > 0) {
@@ -206,5 +205,4 @@ exports.postNewPassword = (req, res, next) => {
 		res.redirect('/login');
 	})
 	.catch(err => console.log(err));
-
-}
+};
