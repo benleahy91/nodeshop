@@ -1,13 +1,17 @@
+const ENV = require('../.env');
+require('dotenv/config');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const { validationResult } = require('express-validator/check');
+console.log(process.env.EMAIL_API);
 
 const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
 	auth: {
-		api_key: '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'
+		api_key: process.env.EMAIL_API
 	}
 }));
 
@@ -36,7 +40,7 @@ exports.getSignup = (req, res, next) => {
 		path: '/signup',
 		pageTitle: 'Signup',
 		errorMessage: message
-	});		
+	});
 };
 
 exports.postLogin = (req, res, next) => {	
@@ -73,32 +77,33 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
 	const email = req.body.email;
 	const password = req.body.password;
-	const confirmPassword = req.body.confirmPassword;
-	User.findOne({email: email})
-	.then(userDoc => {
-		if (userDoc) {
-			req.flash('error', 'Email address already exists.');
-			return res.redirect('/signup')
-		};
-		return bcrypt.hash(password, 12)
-		.then(hashedPassword => {
-			const user = new User({
-				email: email,
-				password: hashedPassword,
-				cart: { items: [] }
-			});
-			return user.save();
-		})
-		.then(result => {
-			res.redirect('/login');
-			return transporter.sendMail({
-				to: email,
-				from: 'shop@node-complete.com',
-				subject: 'You signed up',
-				html: '<h1> You have signed up! <h1>'
-			});
-		})
-		.catch(err => console.log(err));
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		return res.status(422).render('auth/signup', {
+			path: '/signup',
+			pageTitle: 'Signup',
+			errorMessage: errors.array()[0].msg
+		});
+	};
+	bcrypt.hash(password, 12)
+	.then(hashedPassword => {
+		const user = new User({
+			email: email,
+			password: hashedPassword,
+			cart: { items: [] }
+		});
+		return user.save();
+	})
+	.then(result => {
+		res.redirect('/login');
+		console.log(EMAIL_API);
+		return transporter.sendMail({
+			to: email,
+			from: 'shop@node-complete.com',
+			subject: 'You signed up',
+			html: '<h1> You have signed up! <h1>'
+		});
 	})
 	.catch(err => console.log(err));
 };

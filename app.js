@@ -1,14 +1,17 @@
+const DOTENV = require('dotenv');
+DOTENV.config();
+const errorController = require('./controllers/error');
+
 const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-
-const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 const MONGODB_URI = 'mongodb://nodeben:nodeBen34@ds145704.mlab.com:45704/nodeshop'
