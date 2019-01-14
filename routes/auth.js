@@ -12,13 +12,14 @@ router.get('/signup', authController.getSignup);
 
 router.post(
 	'/login',
-	[
-		body('email', 'Please enter a valid email address')
-			.isEmail(),
-		body('password', 'Password must contain at least five characters.')
-			.isLength({min: 5})
-			.isAlphanumeric()
-	],
+  [
+    body('email')
+      .isEmail()
+      .withMessage('Please enter a valid email address.'),
+    body('password', 'Invalid Password.')
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+  ],
 	authController.postLogin
 );
 
