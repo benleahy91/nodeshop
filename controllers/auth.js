@@ -56,7 +56,6 @@ exports.getSignup = (req, res, next) => {
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
 	const password = req.body.password;
-	
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(422).render('auth/login', {
@@ -73,7 +72,6 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
 	.then(user => {
 		if (!user) {
-			console.log('Hello');
 			return res.status(422).render('auth/login'), {
 				path: '/login',
 				pageTitle: 'Login',
@@ -112,7 +110,11 @@ exports.postLogin = (req, res, next) => {
 			res.redirect('/login');
 		});
 	})
-	.catch(err => console.log(err));
+	.catch(err => {
+		const error = new Error(err);
+		error.httpStatusCode = 500;
+		return next(error);
+	});
 };
 
 exports.postSignup = (req, res, next) => {
@@ -151,7 +153,11 @@ exports.postSignup = (req, res, next) => {
 			html: '<h1> You have signed up! <h1>'
 		});
 	})
-	.catch(err => console.log(err));
+	.catch(err => {
+		const error = new Error(err);
+		error.httpStatusCode = 500;
+		return next(error);
+	});
 };
 
 exports.postLogout = (req, res, next) => {
@@ -204,7 +210,11 @@ exports.postReset = (req, res, next) => {
 				`
 			});
 		})
-		.catch(err => console.log(err));
+		.catch(err => {
+			const error = new Error(err);
+			error.httpStatusCode = 500;
+			return next(error);
+		});
 	});
 };
 
@@ -227,7 +237,11 @@ exports.getNewPassword = (req, res, next) => {
 			userId: user._id.toString(),
 			passwordToken: token
 		})
-	.catch(err => console.log(err));
+		.catch(err => {
+			const error = new Error(err);
+			error.httpStatusCode = 500;
+			return next(error);
+		});
 	});	
 };
 
@@ -255,5 +269,8 @@ exports.postNewPassword = (req, res, next) => {
 	.then(result => {
 		res.redirect('/login');
 	})
-	.catch(err => console.log(err));
-};
+	.catch(err => {
+		const error = new Error(err);
+		error.httpStatusCode = 500;
+		return next(error);
+	});};
