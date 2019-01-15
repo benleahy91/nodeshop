@@ -84,7 +84,7 @@ exports.postLogin = (req, res, next) => {
 				},
 				validationErrors: []
 			};
-		};		
+		};
 		bcrypt
 		.compare(password, user.password)
 		.then(doMatch => {
@@ -120,7 +120,7 @@ exports.postSignup = (req, res, next) => {
 	const password = req.body.password;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(422).render('auth/signup', {
+    return res.status(422).render('auth/signup', {
 			path: '/signup',
 			pageTitle: 'Signup',
 			errorMessage: errors.array()[0].msg,
@@ -129,9 +129,11 @@ exports.postSignup = (req, res, next) => {
 				password: password,
 				confirmPassword: req.body.confirmPassword
 			},
+			validationErrors: errors.array()
 		});
 	};
-	bcrypt.hash(password, 12)
+	bcrypt
+	.hash(password, 12)
 	.then(hashedPassword => {
 		const user = new User({
 			email: email,
@@ -142,7 +144,6 @@ exports.postSignup = (req, res, next) => {
 	})
 	.then(result => {
 		res.redirect('/login');
-		console.log(EMAIL_API);
 		return transporter.sendMail({
 			to: email,
 			from: 'shop@node-complete.com',
