@@ -17,8 +17,24 @@ exports.postAddProduct = (req, res, next) => {
   const image = req.file;
   const price = req.body.price;
 	const description = req.body.description;
-	console.log(image);
-	
+	if (!image) {
+		return res.status(422).render('admin/edit-product', {
+      pageTitle: 'Add Product',
+      path: '/admin/edit-product',
+			editing: false,
+			hasError: true,
+			product: {
+				title: title,
+				price: price,
+				description: description
+			},
+			errorMessage: 'Attached file is not a recognized image file format.',
+			validationErrors: []
+    }); 
+	};
+
+	const imageUrl = image.path;
+
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) {
@@ -106,28 +122,26 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
 	const prodId = req.body.productId;
 	const updatedTitle = req.body.title;
-	const updatedImageUrl = req.body.imageUrl;
+	const image = req.file;
 	const updatedPrice = req.body.price;
 	const updatedDesc = req.body.description;
+
 	const errors = validationResult(req);
-	
 
 	if (!errors.isEmpty()) {
 		return res.status(422).render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      path: '/admin/edit-product',
-			editing: true,
+			pageTitle: 'Add Product',
+			path: '/admin/add-product',
+			editing: false,
 			hasError: true,
 			product: {
-				title: updatedTitle,
-				imageUrl: updatedImageUrl,
-				price: updatedPrice,
-				description: updatedDesc,
-				_id: prodId
+				title: title,
+				price: price,
+				description: description
 			},
-			errorMessage: errors.array()[0].msg,
-			validationErrors: errors.array()
-    });
+			errorMessage: 'Attached file is not a recognized image file format.',
+			validationErrors: []
+		});
 	};
 
   Product.findById(prodId)
@@ -138,7 +152,9 @@ exports.postEditProduct = (req, res, next) => {
 		product.title = updatedTitle;
 		product.price = updatedPrice;
 		product.description = updatedDesc;
-		product.imageUrl = updatedImageUrl;
+		if (image) {
+			product.imageUrl = image.path;
+		};
 		return product.save()
 		.then(result => {
 			res.redirect('/admin/products');
