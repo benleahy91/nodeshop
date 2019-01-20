@@ -6,7 +6,5 @@
 // };
 
 // try {
-// 	console.log(sum(1));
 // } catch (error) {
-// 	console.log('Error occured');
 // };

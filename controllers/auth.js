@@ -182,7 +182,6 @@ exports.getReset = (req, res, next) => {
 };
 
 exports.postReset = (req, res, next) => {
-	console.log('hello')
 	crypto.randomBytes(32, (err, buffer) => {
 		if (err) {
 			return res.redirect('reset');
