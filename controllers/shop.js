@@ -21,10 +21,10 @@ exports.getProducts = (req, res, next) => {
         .limit(itemsPerPage);
     })
     .then(products => {
-      res.render('shop/index', {
+      res.render('shop/product-list', {
         prods: products,
-        pageTitle: 'Shop',
-        path: '/',
+        pageTitle: 'Products',
+        path: '/products',
         currentPage: page,
         hasNextPage: itemsPerPage * page < totalItems,
         hasPreviousPage: page > 1,
