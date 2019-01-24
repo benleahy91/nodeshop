@@ -31,7 +31,7 @@ exports.postAddProduct = (req, res, next) => {
 			},
 			errorMessage: 'Attached file is not a recognized image file format.',
 			validationErrors: []
-    }); 
+    });
 	};
 
 	const imageUrl = image.path;
@@ -65,7 +65,7 @@ exports.postAddProduct = (req, res, next) => {
 	product
 	.save()
 	.then(result => {
-		res.redirect('/admin/products')
+		res.redirect('/admin/products');
 	})
 	.catch(err => {
 		const error = new Error(err);
@@ -171,19 +171,19 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
 	const prodId = req.params.productId;
-	
 	Product.findById(prodId)
 	.then(product => {
 		if (!product) {
 		return next(new Error('Product not found.'));
 		};
 		fileHelper.deleteFile(product.imageUrl);
-		Product.deleteOne({ _id: prodId, userId: req.user._id });
+    return Product.deleteOne({ _id: prodId, userId: req.user._id });
 	})
 	.then(() => {
-		res.status(200).json({message: 'Success'});
+		res.status(200).json({message: 'Success'});		
 	})
 	.catch(err => {
-		res.status(500).json({message: 'Deleting product failed'})
+		console.log(err);
+		res.status(500).json({message: 'Deleting product failed'});
 	});
 };
