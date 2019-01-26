@@ -17,7 +17,7 @@ const shopController = require('./controllers/shop');
 const isAuth = require('./middleware/is-auth');
 const User = require('./models/user');
 
-const MONGODB_URI = 'mongodb://nodeben:nodeBen34@ds145704.mlab.com:45704/nodeshop'
+const MONGODB_URI = 'mongodb://nodeben:nodeBen34@ds145704.mlab.com:45704/nodeshop';
 
 const app = express();
 const store = new MongoDBStore({
@@ -44,7 +44,7 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
   } else {
     cb(null, false);
-  }
+  };
 };
 
 app.set('view engine', 'ejs');
