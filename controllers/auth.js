@@ -98,7 +98,7 @@ exports.postLogin = (req, res, next) => {
 						console.log(err);
 						res.redirect('/');
 					});
-				}
+				};
 				return res.status(422).render('auth/login', {
 					path: '/login',
 					pageTitle: 'Login',
@@ -235,7 +235,7 @@ exports.getNewPassword = (req, res, next) => {
 				message = message[0];
 			} else {
 				message = null;
-			}
+			};
 			res.render('auth/new-password', {
 				path: '/new-password',
 				pageTitle: 'New Password',
