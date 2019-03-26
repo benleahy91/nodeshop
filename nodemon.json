@@ -1,0 +1,8 @@
+{
+	"env": {
+		"EMAIL_API": "'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'",
+		"STRIPE_API": "'pk_test_ZHtNPbP4IWBS9DZS7BjWcH8q'",
+		"STRIPE_API_2": "'sk_test_SrUf2jWdAIynySjB7FzPpmly'",
+		"MONGO_URI": "'mongodb://nodeben:nodeBen34@ds145704.mlab.com:45704/nodeshop'"
+	}
+}

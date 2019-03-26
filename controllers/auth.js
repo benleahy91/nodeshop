@@ -1,5 +1,5 @@
 const ENV = require('../.env');
-require('dotenv/config');
+// require('dotenv/config');
 const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
